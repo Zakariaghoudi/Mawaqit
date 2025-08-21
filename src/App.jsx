@@ -1,12 +1,11 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MainContext from "./components/MainContext";
 import Prayers from "./components/Prayers";
 
 function App() {
     
-    const city = "Ghannouch";
-    const country = "Tunisia";
+    
     const prayerMethod = 5; 
 
     const [prayerData, setPrayerData] = useState(null);
@@ -14,12 +13,11 @@ function App() {
     const [nextPrayer, setNextPrayer] = useState({ name: 'Loading...', time: '', countdown: '' });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
-   //import prayerData from api 
-    useEffect(() => {
-      const fetchPrayerTimes = async () => {
+    const fetchPrayerTimes = useCallback(async (latitude, longitude)=>
+    {setLoading(true)
+      setError(null)
         try {
-          const response = await fetch(`http://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=${prayerMethod}`);
+          const response = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
@@ -30,9 +28,24 @@ function App() {
         } finally {
           setLoading(false);
         }
-      };
-  
-      fetchPrayerTimes();
+      }, []);
+     useEffect(() => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            fetchPrayerTimes(latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location: ", error);
+            setError("Error getting location.");
+            setLoading(false);
+          }
+        );
+      } else {
+        setError("Geolocation is not supported by this browser.");
+        setLoading(false);
+      }
     }, []);
   
     // === update hour every sec ===
@@ -43,6 +56,8 @@ function App() {
   
       return () => clearInterval(timer);
     }, []);
+
+    
 //calculate next prayer + the countdown
       useEffect(() => {
         if (prayerData) {

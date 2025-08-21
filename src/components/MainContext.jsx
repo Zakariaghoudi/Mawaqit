@@ -1,5 +1,5 @@
 
-import "./MainContext.css";
+import "./Maincontext.css";
 
 export default function MainContext({prayerData,currentTime, nextPrayer, loading}) {
   if (loading) return <div>Loading...</div>;
