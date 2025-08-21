@@ -17,11 +17,7 @@ function App() {
     {setLoading(true)
       setError(null)
         try {
-<<<<<<< HEAD
           const response = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}`);
-=======
-          const response = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=${prayerMethod}`);
->>>>>>> 92f53b8ff03bf91bc5b74b6581b9d2b377cd68ec
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
