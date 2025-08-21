@@ -19,7 +19,7 @@ function App() {
     useEffect(() => {
       const fetchPrayerTimes = async () => {
         try {
-          const response = await fetch(`http://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=${prayerMethod}`);
+          const response = await fetch(`https://api.aladhan.com/v1/timingsByCity?city=${city}&country=${country}&method=${prayerMethod}`);
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
