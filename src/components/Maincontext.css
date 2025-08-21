@@ -1,0 +1,20 @@
+
+ h1, h2 , h3 , h4 {
+    margin: 0;
+    padding: 5px;
+}
+
+.next-prayer{
+    padding:  10px;
+}
+.current-time{
+    color: white;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 10px 25px;
+    border-radius: 15px;
+}
+.current-time h1{
+box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+padding: 5px 10px;
+border-radius: 5px;
+}
