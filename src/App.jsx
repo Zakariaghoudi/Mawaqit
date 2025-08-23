@@ -51,12 +51,13 @@ function App() {
             );
             const geoData = await geoRes.json();
             const city =
-              geoData.address.city ||
               geoData.address.town ||
-              geoData.address.village ||
+              geoData.address.city ||
+              geoData.address.county ||
               "";
             const country = geoData.address.country || "";
-            setLocation(`${country}${city ? ", " + city : ""}`);
+            const county = geoData.address.county || "";
+            setLocation(`${country}${city ? ", " + city : ""}${county ? ", " + county : ""}`);
           } catch {
             setLocation("Location unavailable");
           }
