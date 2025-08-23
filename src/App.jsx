@@ -4,90 +4,124 @@ import MainContext from "./components/MainContext";
 import Prayers from "./components/Prayers";
 
 function App() {
-    
-    
-    const prayerMethod = 5; 
+  const prayerMethod = 5;
 
-    const [prayerData, setPrayerData] = useState(null);
-    const [currentTime, setCurrentTime] = useState(new Date());
-    const [nextPrayer, setNextPrayer] = useState({ name: 'Loading...', time: '', countdown: '' });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const fetchPrayerTimes = useCallback(async (latitude, longitude)=>
-    {setLoading(true)
-      setError(null)
-        try {
-          const response = await fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}`);
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          const data = await response.json();
-          setPrayerData(data.data);
-        } catch (error) {
-          setError(error.message);
-        } finally {
-          setLoading(false);
-        }
-      }, []);
-     useEffect(() => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            fetchPrayerTimes(latitude, longitude);
-          },
-          (error) => {
-            console.error("Error getting location: ", error);
-            setError("Error getting location.");
-            setLoading(false);
-          }
-        );
-      } else {
-        setError("Geolocation is not supported by this browser.");
-        setLoading(false);
+  const [prayerData, setPrayerData] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [nextPrayer, setNextPrayer] = useState({
+    name: "Loading...",
+    time: "",
+    countdown: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [location, setLocation] = useState("Loading...");
+
+  const fetchPrayerTimes = useCallback(async (latitude, longitude) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(
+        `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    }, []);
-  
-    // === update hour every sec ===
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentTime(new Date());
-      }, 1000);
-  
-      return () => clearInterval(timer);
-    }, []);
+      const data = await response.json();
+      setPrayerData(data.data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
-    
-//calculate next prayer + the countdown
-      useEffect(() => {
-        if (prayerData) {
-          const timings = prayerData.timings;
-          const now = new Date();
-          const prayerList = [
+  // Get location and prayer times
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          fetchPrayerTimes(latitude, longitude);
+
+          // Reverse geocoding to get city and country
+          try {
+            const geoRes = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            );
+            const geoData = await geoRes.json();
+            const city =
+              geoData.address.city ||
+              geoData.address.town ||
+              geoData.address.village ||
+              "";
+            const country = geoData.address.country || "";
+            setLocation(`${country}${city ? ", " + city : ""}`);
+          } catch {
+            setLocation("Location unavailable");
+          }
+        },
+        (error) => {
+          console.error("Error getting location: ", error);
+          setError("Error getting location.");
+          setLoading(false);
+          setLocation("Location unavailable");
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by this browser.");
+      setLoading(false);
+      setLocation("Location unavailable");
+    }
+  }, [fetchPrayerTimes]);
+
+  // === update hour every sec ===
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  //calculate next prayer + the countdown
+  useEffect(() => {
+    if (prayerData) {
+      const timings = prayerData.timings;
+      const now = new Date();
+      const prayerList = [
         { name: "Fajr", time: timings.Fajr },
         { name: "Dhuhr", time: timings.Dhuhr },
         { name: "Asr", time: timings.Asr },
         { name: "Maghrib", time: timings.Maghrib },
         { name: "Isha", time: timings.Isha },
-    ];
-         let nextPrayerFound = null;
+      ];
+      let nextPrayerFound = null;
 
       for (const prayer of prayerList) {
-        const [hour, minute] = prayer.time.split(':');
+        const [hour, minute] = prayer.time.split(":");
         const prayerTime = new Date();
         prayerTime.setHours(hour, minute, 0, 0);
 
         if (prayerTime > now) {
-          nextPrayerFound = { name: prayer.name, time: prayer.time, date: prayerTime };
+          nextPrayerFound = {
+            name: prayer.name,
+            time: prayer.time,
+            date: prayerTime,
+          };
           break;
         }
       }
       if (!nextPrayerFound) {
-        const [hour, minute] = prayerList[0].time.split(':');
+        const [hour, minute] = prayerList[0].time.split(":");
         const tomorrowFajr = new Date();
         tomorrowFajr.setDate(tomorrowFajr.getDate() + 1);
         tomorrowFajr.setHours(hour, minute, 0, 0);
-        nextPrayerFound = { name: prayerList[0].name, time: prayerList[0].time, date: tomorrowFajr };
+        nextPrayerFound = {
+          name: prayerList[0].name,
+          time: prayerList[0].time,
+          date: tomorrowFajr,
+        };
       }
 
       // حساب الوقت المتبقي
@@ -98,30 +132,27 @@ function App() {
       setNextPrayer({
         name: nextPrayerFound.name,
         time: nextPrayerFound.time,
-        countdown: `${hours}h ${minutes}min`
+        countdown: `${hours}h ${minutes}min`,
       });
     }
-  }, [currentTime, prayerData]); 
+  }, [currentTime, prayerData]);
 
   if (loading) return <div>Loading prayer times...</div>;
   if (error) return <div>Error: {error}</div>;
   return (
     <div className="app">
+      <h2>{location}</h2>
       <div className="header">
-      <MainContext 
-      prayerData={prayerData}
-      currentTime={currentTime}
-      nextPrayer={nextPrayer}
-      loading={loading}
-       />
+        <MainContext
+          prayerData={prayerData}
+          currentTime={currentTime}
+          nextPrayer={nextPrayer}
+          loading={loading}
+        />
       </div>
       <div className="prayers">
-      <Prayers
-      loading={loading}
-      error={error}
-      prayerData={prayerData}
-      />
-    </div>
+        <Prayers loading={loading} error={error} prayerData={prayerData} />
+      </div>
     </div>
   );
 }
