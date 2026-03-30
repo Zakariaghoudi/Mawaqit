@@ -22,19 +22,31 @@ html, body {
 
 /* اسم المدينة بشكل أصغر */
 h2 {
-  font-size: 1rem;
-  margin: 30px 0 5px 0;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 600; /* خط سميك وواضح */
+  margin: 40px 0 10px 0;
+  text-align: center; /* توسيط النص */
+  width: 100%;
+  display: block;
+  opacity: 0.9;
+  letter-spacing: 0.5px;
 }
+
 
 /* بطاقة الوقت - أصبحت أنحف */
 .header {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  padding: 12px;
-  margin: 5px 0;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center; /* توسيط كل ما بداخل البطاقة */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 
 /* حاوية الصلوات - تأخذ المساحة المتبقية */
 .prayers {
