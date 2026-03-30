@@ -1,16 +1,36 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tawqit Al-Salat</title>
-    <link rel="manifest" href="/manifest.json" />
-<meta name="theme-color" content="#1a2a6c" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>مواقيت الصلاة - غنوش</title>
 
+    <!-- ربط ملف المانيفست -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- إعدادات الأندرويد والكروم -->
+    <meta name="theme-color" content="#1e3a8a" />
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- إعدادات الآيفون (Safari) لجعل الواجهة ملوّنة وملء الشاشة -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="مواقيت غنوش">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- كود تسجيل الـ Service Worker (هام جداً للتثبيت) -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('SW Registered'))
+            .catch(err => console.log('SW Registration Failed', err));
+        });
+      }
+    </script>
   </body>
 </html>
