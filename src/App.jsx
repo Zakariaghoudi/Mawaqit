@@ -5,6 +5,8 @@ import Prayers from "./components/Prayers";
 
 function App() {
   const prayerMethod = 3;
+  const tuneValues = "0,-1,0,7,0,2,0,6"; 
+
 
   const [prayerData, setPrayerData] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -22,7 +24,7 @@ function App() {
     setError(null);
     try {
       const response = await fetch(
-        `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}`
+        `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${prayerMethod}&tune=${tuneValues}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
