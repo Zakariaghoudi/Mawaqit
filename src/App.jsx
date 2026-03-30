@@ -141,8 +141,16 @@ function App() {
     }
   }, [currentTime, prayerData]);
 
-  if (loading) return <div>Loading prayer times...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) {
+  return (
+    <div className="loading-container">
+      <div className="spinner"></div>
+      <h2 className="loading-text">جاري تحديد الموقع...</h2>
+      <p className="loading-subtext">يرجى الانتظار قليلاً لتحديد مواقيت الصلاة بدقة</p>
+    </div>
+  );
+}
+
   return (
     <div className="app">
           {prayerData && <Azan prayerTimings={prayerData.timings} />}
