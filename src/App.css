@@ -1,76 +1,102 @@
-/* إخفاء شريط التمرير نهائياً */
+/* إخفاء شريط التمرير نهائياً *//* تنسيق الجسم العام ليكون ملء الشاشة دون تمرير */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
   height: 100vh;
-  overflow: hidden; /* منع التمرير */
-  background-color: #1e3a8a;
+  overflow: hidden; /* يمنع التمرير لتبقى واجهة واحدة */
+  background-color: #0d1117; /* لون غامق خلف التطبيق */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .app {
   display: flex;
   flex-direction: column;
-  width: 100vw;
-  height: 100vh; /* طول الشاشة بالظبط */
+  width: 100%;
+  max-width: 450px; /* حجم الهاتف المثالي */
+  height: 100vh;
   color: white;
-  background: linear-gradient(180deg, #1e3a8a 0%, #162e6b 100%);
-  padding: 10px 15px; /* تقليل الحواف */
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%); /* تدرج غامق وأنيق */
+  padding: 15px;
   box-sizing: border-box;
   justify-content: space-between; /* توزيع العناصر بالتساوي */
 }
 
-/* اسم المدينة بشكل أصغر */
+/* === تنسيق اسم المدينة (في الوسط وبخط واضح) === */
 h2 {
-  font-size: 1rem;
-  margin: 30px 0 5px 0;
+  font-size: 1.1rem;
   font-weight: 500;
+  margin: 35px 0 5px 0;
+  text-align: center; /* في الوسط */
+  opacity: 0.8;
+  width: 100%; /* لضمان التوسط */
 }
 
-/* بطاقة الوقت - أصبحت أنحف */
+/* === بطاقة الوقت الحالي (الشفافة) === */
 .header {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05); /* شفافة جداً */
   backdrop-filter: blur(10px);
   border-radius: 15px;
-  padding: 12px;
+  padding: 15px;
   margin: 5px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* حاوية الصلوات - تأخذ المساحة المتبقية */
+/* === جدول الصلوات === */
 .prayers {
-  background: rgba(255, 255, 255, 0.05);
+  width: 100%;
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 20px;
-  padding: 5px 15px;
-  margin-bottom: 5px;
+  padding: 5px;
+  box-sizing: border-box;
 }
 
-/* تقليل المسافات بين الصلوات */
+/* === جعل أسطر الصلاة في الوسط وبخط واضح === */
 li {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* توسيط أفقي لكل السطر */
   align-items: center;
-  padding: 10px 0; /* تقليل الارتفاع */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  list-style: none;
+  padding: 10px 0; /* تقليل الارتفاع لتناسب الشاشة الواحدة */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  text-align: center; /* في الوسط */
 }
 
-.prayer-name { font-size: 0.95rem; }
-.prayer-time { font-weight: bold; font-size: 1rem; }
+li:last-child {
+  border-bottom: none;
+}
 
-/* الشريط السفلي (الجمعة والشروق) */
+.prayer-name {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-right: 15px; /* مسافة بسيطة بين الاسم والوقت */
+}
+
+.prayer-time {
+  font-size: 1rem;
+  font-weight: 600; /* خط أوضح قليلاً */
+}
+
+/* === الشريط السفلي (الجمعة والشروق) === */
 .other-prayers {
   display: flex;
   justify-content: space-around;
-  padding: 8px;
-  background: rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
   font-size: 0.8rem;
-  margin-bottom: 10px;
+  text-align: center;
 }
 
-/* زر الأذان */
+/* === زر الأذان العائم (في مكانه الصحيح) === */
 .azan-toggle-container {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   z-index: 100;
+}
 }
