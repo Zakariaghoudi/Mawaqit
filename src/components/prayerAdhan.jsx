@@ -3,6 +3,23 @@ import { useEffect, useState } from 'react';
 const AzanPlayer = ({ prayerTimings }) => {
   const [isMuted, setIsMuted] = useState(true);
 
+  // 1. طلب إذن التنبيهات عند تحميل المكون
+  useEffect(() => {
+    if ("Notification" in window) {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // 2. دالة إرسال التنبيه النصي
+  const sendNotification = (prayerName) => {
+    if (Notification.permission === "granted") {
+      new Notification(`اقتربت صلاة ${prayerName}`, {
+        body: `باقي 5 دقائق على موعد الأذان. حان وقت الوضوء!`,
+        icon: "/logo192.png", // تأكد من وجود الأيقونة في مجلد public
+      });
+    }
+  };
+
   const playAzan = () => {
     const audio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
     audio.play().catch(err => console.log("Autoplay pending..."));
@@ -11,21 +28,45 @@ const AzanPlayer = ({ prayerTimings }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
+      
+      // الوقت الحالي بتنسيق HH:mm (مثلاً 12:45)
       const currentTime = now.toLocaleTimeString('en-GB', { 
         hour: '2-digit', 
         minute: '2-digit', 
         hour12: false 
       });
 
-      if (prayerTimings && !isMuted) {
-        const { Fajr, Dhuhr, Asr, Maghrib, Isha } = prayerTimings;
-        const timesArray = [Fajr, Dhuhr, Asr, Maghrib, Isha];
+      // الوقت بعد 5 دقائق من الآن
+      const fiveMinutesLater = new Date(now.getTime() + 5 * 60000);
+      const notificationTime = fiveMinutesLater.toLocaleTimeString('en-GB', { 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        hour12: false 
+      });
 
-        if (timesArray.includes(currentTime)) {
+      if (prayerTimings) {
+        const { Fajr, Dhuhr, Asr, Maghrib, Isha } = prayerTimings;
+        const prayers = { 
+          "الفجر": Fajr, 
+          "الظهر": Dhuhr, 
+          "العصر": Asr, 
+          "المغرب": Maghrib, 
+          "العشاء": Isha 
+        };
+
+        // فحص وقت الأذان الفعلي (إذا لم يكن مكتوم الصوت)
+        if (!isMuted && Object.values(prayers).includes(currentTime)) {
           playAzan();
         }
+
+        // فحص وقت التنبيه (قبل 5 دقائق) - يعمل دائماً إذا وافق المستخدم على الإشعارات
+        Object.entries(prayers).forEach(([name, time]) => {
+          if (time === notificationTime) {
+            sendNotification(name);
+          }
+        });
       }
-    }, 60000);
+    }, 60000); // يفحص كل دقيقة
 
     return () => clearInterval(timer);
   }, [prayerTimings, isMuted]);
@@ -33,7 +74,7 @@ const AzanPlayer = ({ prayerTimings }) => {
   const toggleAzan = () => {
     if (isMuted) {
       setIsMuted(false);
-      // تشغيل صامت لفتح إذن المتصفح دون إصدار صوت الآن
+      // محاكاة تشغيل لفتح قفل الصوت في المتصفح
       const silentAudio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
       silentAudio.volume = 0; 
       silentAudio.play().then(() => {
@@ -48,26 +89,7 @@ const AzanPlayer = ({ prayerTimings }) => {
     <div style={{ textAlign: 'center', margin: '15px 0' }}>
       <button 
         onClick={toggleAzan}
-       style={{
-  padding: '8px 16px',
-  backgroundColor: isMuted ? '#f0f0f0' : '#e8f5e9', // ألوان باهتة ومريحة
-  color: isMuted ? '#666' : '#2e7d32',
-  border: `1px solid ${isMuted ? '#ccc' : '#2e7d32'}`,
-  borderRadius: '12px', // حواف ناعمة تشبه iOS/Android
-  fontSize: '13px',
-  fontWeight: '600',
-  display: 'flex',
-  alignItems: 'center',
-  gap: '8px',
-  margin: '10px auto',
-  boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
-}}
-
-      >
-        {isMuted ? "🔇 تفعيل الأذان التلقائي" : "🔔 الأذان مفعّل لمواقيت الصلاة"}
-      </button>
-    </div>
-  );
-};
-
-export default AzanPlayer;
+        style={{
+          padding: '10px 20px',
+          backgroundColor: isMuted ? '#fdf2f2' : '#f0fdf4',
+          color:
