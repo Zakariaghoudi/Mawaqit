@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 const AzanPlayer = ({ prayerTimings }) => {
   const [isMuted, setIsMuted] = useState(true);
 
-  const playSound = () => {
+  const playAzan = () => {
     const audio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
-    audio.play().catch(err => console.error("Autoplay blocked:", err));
+    audio.play().catch(err => console.log("Autoplay pending..."));
   };
 
   useEffect(() => {
@@ -22,7 +22,7 @@ const AzanPlayer = ({ prayerTimings }) => {
         const timesArray = [Fajr, Dhuhr, Asr, Maghrib, Isha];
 
         if (timesArray.includes(currentTime)) {
-          playSound();
+          playAzan();
         }
       }
     }, 60000);
@@ -33,7 +33,12 @@ const AzanPlayer = ({ prayerTimings }) => {
   const toggleAzan = () => {
     if (isMuted) {
       setIsMuted(false);
-      playSound(); // يؤذن فوراً عند التفعيل للتجربة وفتح إذن المتصفح
+      // تشغيل صامت لفتح إذن المتصفح دون إصدار صوت الآن
+      const silentAudio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
+      silentAudio.volume = 0; 
+      silentAudio.play().then(() => {
+        setTimeout(() => silentAudio.pause(), 100);
+      }).catch(e => console.log(e));
     } else {
       setIsMuted(true);
     }
@@ -51,10 +56,11 @@ const AzanPlayer = ({ prayerTimings }) => {
           borderRadius: '20px',
           cursor: 'pointer',
           fontWeight: 'bold',
-          transition: '0.3s'
+          transition: '0.3s',
+          fontSize: '14px'
         }}
       >
-        {isMuted ? "🔇 تفعيل واختبار الأذان" : "🔔 الأذان مفعّل"}
+        {isMuted ? "🔇 تفعيل الأذان التلقائي" : "🔔 الأذان مفعّل لمواقيت الصلاة"}
       </button>
     </div>
   );
