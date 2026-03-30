@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 import MainContext from "./components/MainContext";
 import Prayers from "./components/Prayers";
-import Azan from "./compoonents/prayerAdhan";
+import Azan from "./components/prayerAdhan";
 
 function App() {
   const prayerMethod = 3;
