@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 const AzanPlayer = ({ prayerTimings }) => {
   const [isMuted, setIsMuted] = useState(true);
 
-  const playAzan = () => {
+  const playSound = () => {
     const audio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
-    audio.play().catch(err => console.log(err));
+    audio.play().catch(err => console.error("Autoplay blocked:", err));
   };
 
   useEffect(() => {
@@ -17,12 +17,12 @@ const AzanPlayer = ({ prayerTimings }) => {
         hour12: false 
       });
 
-      if (prayerTimings) {
+      if (prayerTimings && !isMuted) {
         const { Fajr, Dhuhr, Asr, Maghrib, Isha } = prayerTimings;
         const timesArray = [Fajr, Dhuhr, Asr, Maghrib, Isha];
 
-        if (timesArray.includes(currentTime) && !isMuted) {
-          playAzan();
+        if (timesArray.includes(currentTime)) {
+          playSound();
         }
       }
     }, 60000);
@@ -30,29 +30,31 @@ const AzanPlayer = ({ prayerTimings }) => {
     return () => clearInterval(timer);
   }, [prayerTimings, isMuted]);
 
+  const toggleAzan = () => {
+    if (isMuted) {
+      setIsMuted(false);
+      playSound(); // يؤذن فوراً عند التفعيل للتجربة وفتح إذن المتصفح
+    } else {
+      setIsMuted(true);
+    }
+  };
+
   return (
-    <div style={{ textAlign: 'center', margin: '20px 0' }}>
+    <div style={{ textAlign: 'center', margin: '15px 0' }}>
       <button 
-        onClick={() => {
-          setIsMuted(!isMuted);
-          if (isMuted) {
-            const a = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
-            a.volume = 0;
-            a.play().then(() => a.pause());
-          }
-        }}
+        onClick={toggleAzan}
         style={{
-          padding: '12px 24px',
-          backgroundColor: isMuted ? '#666' : '#28c76f',
+          padding: '10px 20px',
+          backgroundColor: isMuted ? '#555' : '#28c76f',
           color: 'white',
           border: 'none',
-          borderRadius: '25px',
-          fontWeight: 'bold',
+          borderRadius: '20px',
           cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+          fontWeight: 'bold',
+          transition: '0.3s'
         }}
       >
-        {isMuted ? "🔇 تفعيل الأذان" : "🔔 الأذان مفعّل"}
+        {isMuted ? "🔇 تفعيل واختبار الأذان" : "🔔 الأذان مفعّل"}
       </button>
     </div>
   );
