@@ -1,10 +1,44 @@
+const CACHE_NAME = 'salati-v1';
+// قائمة الملفات الأساسية التي يحتاجها التطبيق للفتح
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/src/main.jsx', // تأكد من مسارات ملفاتك
+  '/manifest.json'
+];
 
-// public/sw.js
+// مرحلة التثبيت: حفظ الملفات في الكاش
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
 
+// مرحلة الاستجابة: إذا لم يوجد إنترنت، خذ النسخة المخزنة
 self.addEventListener('fetch', (event) => {
-  event.respondWith(fetch(event.request));
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // إذا وجد الملف في الكاش، أرجعه، وإلا اطلبه من الإنترنت
+        return response || fetch(event.request);
+      })
+  );
 });
 
+// تنظيف الكاش القديم عند التحديث
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cache) => {
+          if (cache !== CACHE_NAME) {
+            return caches.delete(cache);
+          }
+        })
+      );
+    })
+  );
+});
