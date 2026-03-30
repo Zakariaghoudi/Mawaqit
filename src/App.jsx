@@ -36,15 +36,6 @@ function App() {
       setLoading(false);
     }
   }, []);
-useEffect(() => {
-  if ("Notification" in window) {
-    Notification.requestPermission().then(permission => {
-      if (permission === "granted") {
-        console.log("تم تفعيل التنبيهات بنجاح");
-      }
-    });
-  }
-}, []);
   // Get location and prayer times
   useEffect(() => {
     if (navigator.geolocation) {
