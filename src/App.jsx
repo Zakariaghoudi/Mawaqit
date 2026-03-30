@@ -4,7 +4,7 @@ import MainContext from "./components/MainContext";
 import Prayers from "./components/Prayers";
 
 function App() {
-  const prayerMethod = 5;
+  const prayerMethod = 3;
 
   const [prayerData, setPrayerData] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
