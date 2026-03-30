@@ -48,17 +48,21 @@ const AzanPlayer = ({ prayerTimings }) => {
     <div style={{ textAlign: 'center', margin: '15px 0' }}>
       <button 
         onClick={toggleAzan}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: isMuted ? '#555' : '#28c76f',
-          color: 'white',
-          border: 'none',
-          borderRadius: '20px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          transition: '0.3s',
-          fontSize: '14px'
-        }}
+       style={{
+  padding: '8px 16px',
+  backgroundColor: isMuted ? '#f0f0f0' : '#e8f5e9', // ألوان باهتة ومريحة
+  color: isMuted ? '#666' : '#2e7d32',
+  border: `1px solid ${isMuted ? '#ccc' : '#2e7d32'}`,
+  borderRadius: '12px', // حواف ناعمة تشبه iOS/Android
+  fontSize: '13px',
+  fontWeight: '600',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '8px',
+  margin: '10px auto',
+  boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
+}}
+
       >
         {isMuted ? "🔇 تفعيل الأذان التلقائي" : "🔔 الأذان مفعّل لمواقيت الصلاة"}
       </button>
