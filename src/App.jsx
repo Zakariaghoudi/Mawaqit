@@ -2,6 +2,7 @@ import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 import MainContext from "./components/MainContext";
 import Prayers from "./components/Prayers";
+import Azan from "./compoonents/prayerAdhan";
 
 function App() {
   const prayerMethod = 3;
@@ -144,6 +145,8 @@ function App() {
   if (error) return <div>Error: {error}</div>;
   return (
     <div className="app">
+          {prayerData && <Azan prayerTimings={prayerData.timings} />}
+    
       <h2>{location}</h2>
       <div className="header">
         <MainContext
