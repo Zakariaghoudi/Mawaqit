@@ -1,75 +1,76 @@
-/* تنسيق الجسم العام ليكون ملء الشاشة *//* إزالة أي هوامش من المتصفح نفسه */
+/* إخفاء شريط التمرير نهائياً */
 html, body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  /* منع التمرير الأفقي المزعج */
-  overflow-x: hidden; 
-  background-color: #1e3a8a; /* نفس لون بداية التدرج لمنع ظهور بياض */
+  height: 100vh;
+  overflow: hidden; /* منع التمرير */
+  background-color: #1e3a8a;
 }
 
 .app {
   display: flex;
   flex-direction: column;
-  /* جعل التطبيق يملأ العرض والطول بالكامل */
-  width: 100vw; 
-  min-height: 100vh;
-  
+  width: 100vw;
+  height: 100vh; /* طول الشاشة بالظبط */
   color: white;
-  /* تدرج لوني يغطي الشاشة بالكامل */
   background: linear-gradient(180deg, #1e3a8a 0%, #162e6b 100%);
-  
-  /* توزيع العناصر بشكل مريح */
-  padding: 20px;
+  padding: 10px 15px; /* تقليل الحواف */
   box-sizing: border-box;
-  text-align: center;
+  justify-content: space-between; /* توزيع العناصر بالتساوي */
 }
 
-/* تحسين اسم المنطقة ليظهر بوضوح */
+/* اسم المدينة بشكل أصغر */
 h2 {
-  font-size: 1.3rem;
-  margin-top: 40px; /* ترك مساحة للكاميرا/النوتش في الآيفون */
-  font-weight: bold;
+  font-size: 1rem;
+  margin: 30px 0 5px 0;
+  font-weight: 500;
 }
 
-/* بطاقة الوقت - جعلناها أعرض لتملأ الشاشة أكثر */
+/* بطاقة الوقت - أصبحت أنحف */
 .header {
   background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 25px;
-  padding: 25px 15px;
-  margin: 20px 0;
-  width: 100%;
-  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 12px;
+  margin: 5px 0;
 }
 
-/* حاوية الصلوات - بدون هوامش جانبية قوية لتملأ العرض */
+/* حاوية الصلوات - تأخذ المساحة المتبقية */
 .prayers {
-  flex: 1; /* تجعل هذا القسم يتمدد ليملأ الفراغ */
-  width: 100%;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 30px 30px 0 0; /* حواف دائرية من الأعلى فقط */
-  padding: 20px;
-  box-sizing: border-box;
-  margin-top: auto; /* دفع القائمة للأسفل */
+  border-radius: 20px;
+  padding: 5px 15px;
+  margin-bottom: 5px;
 }
 
+/* تقليل المسافات بين الصلوات */
 li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 0; /* تقليل الارتفاع */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.prayer-name { font-size: 1.2rem; }
-.prayer-time { font-weight: bold; font-size: 1.2rem; }
+.prayer-name { font-size: 0.95rem; }
+.prayer-time { font-weight: bold; font-size: 1rem; }
 
-/* إخفاء الزر التقليدي وجعله أيقونة عائمة بالأعلى */
+/* الشريط السفلي (الجمعة والشروق) */
+.other-prayers {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+}
+
+/* زر الأذان */
 .azan-toggle-container {
   position: absolute;
-  top: 15px;
-  right: 15px;
-}
+  top: 10px;
+  right: 10px;
+  z-index: 100;
 }
