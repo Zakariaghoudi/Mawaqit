@@ -1,106 +1,110 @@
+/* تنسيق الجسم العام ليكون ملء الشاشة */
 body {
+  margin: 0;
+  padding: 0;
   width: 100%;
-  text-align: center;
+  min-height: 100vh;
+  background-color: #0f172a; /* لون غامق خلف التطبيق */
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   display: flex;
-  align-content: center;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .app {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
-  width: 400px;
-  height: 550px;
+  width: 100%;
+  max-width: 450px; /* حجم الهاتف المثالي */
+  min-height: 100vh; /* ليملأ طول الشاشة */
   color: white;
-  background: linear-gradient(to right, #163542, #4b92b1);
+  background: linear-gradient(180deg, #1e3a8a 0%, #3b82f6 100%);
   padding: 20px;
-  border-radius: 10px;
+  box-sizing: border-box;
+  position: relative;
 }
+
+/* تنسيق اسم المدينة */
+h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 40px 0 20px 0;
+  text-align: center;
+  opacity: 0.9;
+}
+
+/* بطاقة الوقت الرئيسي (الزجاجية) */
 .header {
-  margin: 0;
-  padding: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
+
+/* حاوية الصلوات */
 .prayers {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-.other-prayers {
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  padding: 15px;
-}
+/* تنسيق كل صلاة في الجدول */
 li {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
   list-style: none;
-  padding: 5px 0;
+  padding: 15px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.prayer {
-  width: 100%;
-  border-bottom: 1px solid #ccc;
+li:last-child {
+  border-bottom: none;
 }
+
 .prayer-name {
-  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 500;
   text-align: left;
 }
+
 .prayer-time {
-  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 700;
   text-align: right;
 }
 
-@media (max-width: 400px) {
-  body {
-    width: 100%;
-    padding: 0;
-    margin: 0 auto;
-  }
+/* تنسيق صلاة الجمعة والشروق في الأسفل */
+.other-prayers {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
 
+/* الزر العائم للأذان (يجب وضعه في الـ JSX في مكان مناسب) */
+.azan-toggle-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+}
+
+/* تحسينات للشاشات الصغيرة جداً */
+@media (max-width: 480px) {
   .app {
-    margin-right: 15px;
-    width: 95vw;
-    min-width: 0;
-    height: auto;
-    padding: 10px;
-    border-radius: 0;
+    padding: 15px;
   }
-
-  .header {
-    font-size: 1.2em;
-  }
-
-  .prayers {
-    width: 100%;
-    padding: 0;
-  }
-
-  .other-prayers {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px 0;
-  }
-
-  li {
-    border-bottom: 1px solid #ccc;
-    flex-direction: column;
-    align-items: flex-start;
-    padding:  0;
-  }
-
-  .prayer {
-    border-bottom: 1px solid #ccc;
-margin: 0 auto;  }
-
-  .prayer-name,
-  .prayer-time {
-    font-size: 1em;
-    width: 100%;
-    text-align: center;
+  
+  h2 {
+    font-size: 1.1rem;
   }
 }
