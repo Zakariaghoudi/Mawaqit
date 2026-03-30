@@ -7,8 +7,6 @@ import Azan from "./components/prayerAdhan";
 function App() {
   const prayerMethod = 3;
   const tuneValues = "0,-1,0,7,0,2,0,6"; 
-
-
   const [prayerData, setPrayerData] = useState(null);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [nextPrayer, setNextPrayer] = useState({
@@ -38,7 +36,15 @@ function App() {
       setLoading(false);
     }
   }, []);
-
+useEffect(() => {
+  if ("Notification" in window) {
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        console.log("تم تفعيل التنبيهات بنجاح");
+      }
+    });
+  }
+}, []);
   // Get location and prayer times
   useEffect(() => {
     if (navigator.geolocation) {
