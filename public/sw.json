@@ -1,44 +1,32 @@
 const CACHE_NAME = 'salati-v1';
-// قائمة الملفات الأساسية التي يحتاجها التطبيق للفتح
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/src/main.jsx', // تأكد من مسارات ملفاتك
-  '/manifest.json'
-];
 
-// مرحلة التثبيت: حفظ الملفات في الكاش
+// التثبيت: اجعل الـ Service Worker يسيطر فوراً
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-  );
+  self.skipWaiting();
 });
 
-// مرحلة الاستجابة: إذا لم يوجد إنترنت، خذ النسخة المخزنة
+// التفعيل: تنظيف أي كاش قديم
+self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
+});
+
+// الاستراتيجية: حاول جلب البيانات من الإنترنت، وإذا فشلت (Offline) خذها من الكاش
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then((response) => {
-        // إذا وجد الملف في الكاش، أرجعه، وإلا اطلبه من الإنترنت
-        return response || fetch(event.request);
+        // إذا نجح الاتصال، خذ نسخة من الملف وضعها في الكاش للمستقبل
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
       })
-  );
-});
-
-// تنظيف الكاش القديم عند التحديث
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            return caches.delete(cache);
-          }
-        })
-      );
-    })
+      .catch(() => {
+        // إذا انقطع الإنترنت، ابحث عن الملف في الكاش
+        return caches.match(event.request);
+      })
   );
 });
