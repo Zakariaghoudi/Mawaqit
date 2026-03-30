@@ -8,8 +8,8 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'مواقيت الصلاة - غنوش',
-        short_name: 'غنوش',
+        name: '  صلاتي ',
+        short_name: 'Salati',
         theme_color: '#1e3a8a',
         icons: [
           {
