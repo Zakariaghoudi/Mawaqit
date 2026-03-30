@@ -6,6 +6,7 @@ html, body {
   height: 100vh;
   overflow: hidden; /* منع التمرير */
   background-color: #1e3a8a;
+  text-align: center ;
 }
 .app {
   display: flex;
