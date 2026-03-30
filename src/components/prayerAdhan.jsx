@@ -4,9 +4,8 @@ const AzanPlayer = ({ prayerTimings }) => {
   const [isMuted, setIsMuted] = useState(true);
 
   const playAzan = () => {
-    // نستخدم الرابط المباشر لضمان وجود صوت حقيقي
     const audio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
-    audio.play().catch(err => console.log("تحتاج لتفاعل المستخدم أولاً"));
+    audio.play().catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -19,7 +18,6 @@ const AzanPlayer = ({ prayerTimings }) => {
       });
 
       if (prayerTimings) {
-        // الصلوات التي نريد التنبيه لها
         const { Fajr, Dhuhr, Asr, Maghrib, Isha } = prayerTimings;
         const timesArray = [Fajr, Dhuhr, Asr, Maghrib, Isha];
 
@@ -27,7 +25,7 @@ const AzanPlayer = ({ prayerTimings }) => {
           playAzan();
         }
       }
-    }, 60000); // يفحص كل دقيقة
+    }, 60000);
 
     return () => clearInterval(timer);
   }, [prayerTimings, isMuted]);
@@ -37,7 +35,6 @@ const AzanPlayer = ({ prayerTimings }) => {
       <button 
         onClick={() => {
           setIsMuted(!isMuted);
-          // تشغيل صامت لمرة واحدة لفتح إذن المتصفح
           if (isMuted) {
             const a = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
             a.volume = 0;
@@ -45,15 +42,17 @@ const AzanPlayer = ({ prayerTimings }) => {
           }
         }}
         style={{
-          padding: '10px 20px',
-          backgroundColor: isMuted ? '#666' : '#1a2a6c',
+          padding: '12px 24px',
+          backgroundColor: isMuted ? '#666' : '#28c76f',
           color: 'white',
           border: 'none',
-          borderRadius: '20px',
-          cursor: 'pointer'
+          borderRadius: '25px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
         }}
       >
-        {isMuted ? "🔇 تشغيل صوت الأذان" : "🔊 الأذان مفعّل"}
+        {isMuted ? "🔇 تفعيل الأذان" : "🔔 الأذان مفعّل"}
       </button>
     </div>
   );
