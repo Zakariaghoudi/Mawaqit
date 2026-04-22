@@ -14,7 +14,7 @@ const AzanPlayer = ({ prayerTimings }) => {
   };
 
   const playAzan = () => {
-    const audio = new Audio("https://www.islamcan.com/audio/adhan/azan1.mp3");
+    const audio = new Audio("https://islamcan.com/audio/adhan/azan2.mp3");
     audio.play().catch(err => console.log("Autoplay pending..."));
   };
 
